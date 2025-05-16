@@ -52,7 +52,9 @@ public:
   int index_num() const;
 
   int record_size() const;
-
+  const std::vector<IndexMeta>& indexes() const {
+        return indexes_;
+    }
 public:
   int serialize(std::ostream &os) const override;
   int deserialize(std::istream &is) override;

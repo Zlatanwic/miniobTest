@@ -926,17 +926,17 @@ RC Table::sync()
   return rc;
 }
 
-RC Table::destroy(const char *base_dir)
+RC Table::destroy()
 {
   // 1) 删除元数据文件 .meta
-  std::string meta_file = std::string(base_dir) + "/" + name() + ".meta";
+  std::string meta_file = this->base_dir_ + "/" + name() + ".meta";
   if (unlink(meta_file.c_str()) != 0) {
     LOG_ERROR("Failed to remove meta file=%s, errno=%d", meta_file.c_str(), errno);
     return RC::GENERIC_ERROR;
   }
 
   // 2) 删除数据文件 .tbl
-  std::string data_file = std::string(base_dir) + "/" + name() + ".tbl";
+  std::string data_file = this->base_dir_ + "/" + name() + ".tbl";
   if (unlink(data_file.c_str()) != 0) {
     LOG_ERROR("Failed to remove data file=%s, errno=%d", data_file.c_str(), errno);
     return RC::GENERIC_ERROR;
@@ -945,7 +945,7 @@ RC Table::destroy(const char *base_dir)
   // 3) 删除所有索引文件 .idx
   for (Index *idx : indexes_) {
     const char *idx_name = idx->index_meta().name();
-    std::string idx_file = std::string(base_dir) + "/" + name() + "." + idx_name + ".idx";
+    std::string idx_file = this->base_dir_ + "/" + name() + "." + idx_name + ".idx";
     if (unlink(idx_file.c_str()) != 0) {
       LOG_ERROR("Failed to remove index file=%s, errno=%d", idx_file.c_str(), errno);
       return RC::GENERIC_ERROR;

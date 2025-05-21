@@ -237,14 +237,14 @@ RC Db::drop_table(const char *table_name)
     }
 
     // 让表自己销毁（删文件）
-    RC rc = table->destroy(data_dir_.c_str());
+    RC rc = table->destroy();
     if (rc != RC::SUCCESS) {
         LOG_WARN("Failed to destroy table %s", table_name);
         return rc;
     }
 
     // 从 table_map_ 中删除表
-    table_map_.erase(table_name);
+    opened_tables_.erase(table_name);
 
     // 释放内存
     delete table;
